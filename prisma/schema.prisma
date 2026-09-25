@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  
+}
+
+model User {
+  id            String   @id @default(cuid())
+  username      String   @unique
+  email         String   @unique
+  passwordHash  String
+  emailVerified Boolean  @default(false)
+
+  coinBalance   Int      @default(0)
+  lockedCoins   Int      @default(0)
+
+  referralCode  String   @unique
+  qrToken       String   @unique
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tripsAsDriver    Trip[] @relation("DriverTrips")
+  tripsAsPassenger Trip[] @relation("PassengerTrips")
+}
+
+model Trip {
+  id          String     @id @default(cuid())
+  driverId    String?
+  passengerId String?
+
+  destination String
+  status      TripStatus @default(AVAILABLE)
+
+  driver    User? @relation("DriverTrips", fields: [driverId], references: [id])
+  passenger User? @relation("PassengerTrips", fields: [passengerId], references: [id])
+
+  driverCoinLocked    Boolean @default(false)
+  passengerCoinLocked Boolean @default(false)
+
+  matchedAt  DateTime?
+  verifiedAt DateTime?
+  expiresAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TripStatus {
+  AVAILABLE
+  SELECTED
+  WAITING_CONFIRMATION
+  MATCHED
+  LOCKED
+  ARRIVING
+  WAITING_PICKUP
+  VERIFIED
+  ON_TRIP
+  COMPLETED
+  REJECTED
+  TIMEOUT
+  CANCELLED
+}
