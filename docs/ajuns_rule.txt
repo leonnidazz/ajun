@@ -1,0 +1,505 @@
+# AJUN — Logika Alur Sistem
+## Antar Jemput UNDIP
+
+Dokumen ini menjadi acuan logika bisnis utama AJUN untuk tahap desain, development, testing, dan pengembangan aplikasi mobile di masa depan.
+
+---
+
+## 1. Konsep Dasar
+
+AJUN adalah platform yang mempertemukan dua pengguna:
+
+- **A = Driver**
+- **B = Penumpang**
+
+Satu akun tidak memiliki status A/B permanen. Setiap pengguna dapat memilih peran ketika akan melakukan perjalanan.
+
+AJUN berperan sebagai penyedia platform/perantara. Tarif perjalanan antara A dan B ditentukan oleh A dan B, bukan oleh AJUN.
+
+---
+
+## 2. Akun AJUN
+
+Pengguna yang belum mempunyai akun harus:
+
+1. Daftar.
+2. Mengisi username.
+3. Mengisi email.
+4. Melakukan verifikasi email.
+5. Membuat password AJUN.
+6. Login.
+
+Setiap akun memiliki:
+
+- User ID unik.
+- Username.
+- Email.
+- Password yang tersimpan secara aman.
+- Kode referral unik.
+- QR Code identitas permanen.
+- Saldo Koin AJUN.
+- Riwayat perjalanan.
+
+QR Code bersifat permanen untuk akun tersebut dan tidak perlu dibuat ulang untuk setiap perjalanan.
+
+---
+
+## 3. Koin AJUN
+
+Nilai:
+
+**1 Koin AJUN = Rp500**
+
+Biaya layanan AJUN:
+
+- A membayar 1 Koin.
+- B membayar 1 Koin.
+- AJUN menerima 2 Koin = Rp1.000 per perjalanan.
+
+Tarif perjalanan yang disepakati A dan B berada di luar biaya layanan AJUN.
+
+Koin tidak langsung dipotong ketika order dibuat. Koin terlebih dahulu **dikunci (locked)** setelah A dan B sepakat.
+
+Koin benar-benar dipotong setelah perjalanan diverifikasi melalui QR.
+
+---
+
+## 4. Dashboard
+
+Setelah login, pengguna masuk ke dashboard.
+
+Informasi utama:
+
+- Username.
+- Email.
+- Saldo Koin AJUN.
+- Tombol Top Up.
+- Pengaturan.
+- Ganti username.
+- Ganti password.
+- Informasi QR Code akun.
+- Informasi kode referral.
+- Riwayat perjalanan.
+- Tombol mulai perjalanan.
+
+Syarat membuat perjalanan:
+
+**Saldo Koin >= 1**
+
+Jika saldo kurang dari 1 Koin, pengguna harus melakukan top up terlebih dahulu.
+
+---
+
+## 5. Pemilihan Peran
+
+Ketika saldo mencukupi, pengguna memilih:
+
+- **A — Driver**
+- **B — Penumpang**
+
+Peran hanya berlaku untuk perjalanan tersebut dan tidak mengubah tipe akun secara permanen.
+
+---
+
+# 6. Alur A — Driver
+
+A memasukkan tujuan/destinasi.
+
+AJUN kemudian mencari kandidat B yang sedang membutuhkan perjalanan.
+
+Prioritas pencarian:
+
+1. Jarak berdasarkan jaringan jalan kendaraan, bukan garis lurus.
+2. Kesamaan arah/tujuan.
+3. Efisiensi rute.
+4. Apakah A tetap lurus/searah atau harus memutar/menyimpang.
+5. Kandidat yang memberikan tambahan jarak dan penggunaan BBM paling efisien diprioritaskan.
+
+### Informasi yang dilihat A sebelum match
+
+A dapat melihat:
+
+- Identitas dasar penumpang sesuai kebijakan privasi.
+- Tujuan akhir B.
+- Jarak/rute yang relevan.
+- Arah perjalanan.
+- Status ketersediaan.
+
+A **tidak melihat titik lokasi B sebelum terjadi kesepakatan**.
+
+Tujuannya adalah mencegah A langsung menuju lokasi B di luar mekanisme AJUN.
+
+---
+
+# 7. Alur B — Penumpang
+
+B memasukkan tujuan/destinasi.
+
+AJUN mencari kandidat A yang sesuai.
+
+Prioritas:
+
+1. Jarak berdasarkan jaringan jalan.
+2. Kesamaan arah/tujuan.
+3. Efisiensi rute.
+4. Potensi penyimpangan/putar balik.
+5. Efisiensi BBM dan tambahan jarak.
+
+### Informasi yang dilihat B
+
+B dapat melihat:
+
+- Data dasar A.
+- Tujuan A.
+- Jarak.
+- Arah perjalanan.
+- Lokasi A/driver.
+- Status ketersediaan.
+
+B dapat memilih driver yang diinginkan.
+
+---
+
+# 8. Mekanisme Pemilihan A dan B
+
+Salah satu pihak dapat memilih pihak lain.
+
+Ketika seseorang dipilih:
+
+**Status pihak yang dipilih = SELECTED / WAITING_CONFIRMATION**
+
+Pihak yang dipilih mendapatkan informasi:
+
+- Siapa yang memilih.
+- Tujuan.
+- Jarak.
+- Informasi relevan perjalanan.
+
+Tersedia dua pilihan:
+
+- TERIMA
+- TOLAK
+
+Batas waktu keputusan:
+
+**30 detik**
+
+Jika diterima:
+
+**A + B = MATCHED**
+
+Jika ditolak:
+
+**kembali AVAILABLE**
+
+Jika tidak ada respons selama 30 detik:
+
+**TIMEOUT → kembali AVAILABLE**
+
+Pihak yang timeout dapat dipilih oleh pengguna lain.
+
+---
+
+# 9. Setelah A dan B Sepakat
+
+Ketika kedua pihak sepakat:
+
+1. Order berubah menjadi MATCHED.
+2. Sistem mengunci 1 Koin milik A.
+3. Sistem mengunci 1 Koin milik B.
+4. Koin belum dipotong.
+5. Lokasi B baru dibuka kepada A.
+6. A dapat melakukan navigasi menuju lokasi B.
+7. A menjemput B.
+
+### Kondisi saldo
+
+Contoh:
+
+A memiliki 5 Koin.
+
+Setelah match:
+
+- 4 Koin tersedia.
+- 1 Koin locked.
+
+B memiliki 3 Koin.
+
+Setelah match:
+
+- 2 Koin tersedia.
+- 1 Koin locked.
+
+---
+
+# 10. Verifikasi Pertemuan
+
+Setelah A tiba dan bertemu B:
+
+1. A membuka fitur scanner.
+2. A melakukan scan QR Code permanen milik B.
+3. Server AJUN memverifikasi QR.
+4. Server memastikan QR tersebut milik B yang benar.
+5. Server memastikan A dan B memang pasangan perjalanan tersebut.
+6. Server memastikan order masih aktif.
+7. Server memastikan perjalanan belum pernah diverifikasi.
+
+Jika valid:
+
+**Status = VERIFIED**
+
+---
+
+# 11. Pemotongan Koin
+
+Setelah VERIFIED:
+
+A:
+- -1 Koin.
+
+B:
+- -1 Koin.
+
+AJUN:
+- +2 Koin.
+
+Karena:
+
+1 Koin = Rp500
+
+Maka:
+
+**AJUN memperoleh Rp1.000 per perjalanan yang terverifikasi.**
+
+Tarif perjalanan A ↔ B tetap merupakan kesepakatan kedua pihak.
+
+---
+
+# 12. Jika Tidak Ada Verifikasi QR
+
+Jika A dan B sudah MATCHED tetapi QR belum diverifikasi:
+
+- Koin tetap LOCKED.
+- Pengguna tidak dapat membuat perjalanan baru menggunakan akun yang sedang terikat.
+- Order tetap berada dalam status menunggu verifikasi.
+
+Batas waktu:
+
+**1 jam**
+
+Jika dalam 1 jam tidak terjadi verifikasi:
+
+1. Sistem menjalankan auto settlement sesuai aturan bisnis.
+2. Koin yang dikunci dipotong.
+3. Perjalanan ditutup.
+4. Akun kembali dapat digunakan untuk perjalanan berikutnya.
+
+Catatan: aturan auto settlement perlu memiliki mekanisme penanganan sengketa/pembatalan yang jelas pada tahap pengembangan berikutnya.
+
+---
+
+# 13. Status Perjalanan
+
+Status utama yang disarankan:
+
+AVAILABLE
+↓
+SELECTED
+↓
+WAITING_CONFIRMATION
+↓
+MATCHED
+↓
+LOCKED
+↓
+ARRIVING
+↓
+WAITING_PICKUP
+↓
+VERIFIED
+↓
+ON_TRIP
+↓
+COMPLETED
+
+Status alternatif:
+
+SELECTED
+↓
+REJECTED
+↓
+AVAILABLE
+
+atau:
+
+SELECTED
+↓
+TIMEOUT
+↓
+AVAILABLE
+
+---
+
+# 14. QR Code
+
+Setiap akun memiliki satu QR Code permanen.
+
+QR tidak dibuat ulang setiap perjalanan.
+
+QR hanya berfungsi sebagai identitas/token akun yang aman.
+
+QR tidak boleh berisi:
+
+- Password.
+- Saldo.
+- Email pribadi.
+- Data sensitif lainnya.
+
+Server AJUN yang menerjemahkan token QR menjadi identitas akun.
+
+Contoh konsep:
+
+QR permanen B
+↓
+Token unik
+↓
+Server AJUN
+↓
+User ID B
+↓
+Verifikasi terhadap perjalanan aktif
+
+---
+
+# 15. Prinsip Keamanan Utama
+
+Sebelum match:
+
+- A tidak mendapatkan lokasi detail B.
+- B dapat melihat lokasi A sesuai aturan sistem.
+
+Setelah match:
+
+- Lokasi B dibuka kepada A untuk penjemputan.
+
+Saat scan:
+
+Server wajib memeriksa:
+
+- QR valid.
+- QR milik B yang benar.
+- A adalah driver yang benar.
+- A dan B memiliki perjalanan aktif yang sama.
+- Order belum diverifikasi.
+- Token belum digunakan secara tidak sah.
+
+---
+
+# 16. Prinsip Matching AJUN
+
+AJUN tidak sekadar mencari pengguna terdekat.
+
+Algoritma matching harus mempertimbangkan:
+
+1. Jarak jalan.
+2. Arah perjalanan.
+3. Tujuan.
+4. Deviasi rute.
+5. Potensi putar balik.
+6. Tambahan jarak.
+7. Efisiensi BBM.
+8. Ketersediaan pengguna.
+9. Status pengguna.
+10. Batas waktu respons.
+
+Tujuan utama:
+
+**Mempertemukan A dan B yang dapat melakukan perjalanan searah dengan tambahan jarak dan penggunaan BBM seminimal mungkin.**
+
+---
+
+# 17. Alur Lengkap AJUN
+
+DAFTAR
+↓
+VERIFIKASI EMAIL
+↓
+LOGIN
+↓
+DASHBOARD
+↓
+CEK KOIN
+
+Jika Koin < 1:
+→ TOP UP
+
+Jika Koin >= 1:
+→ PILIH A / B
+
+A:
+→ Input tujuan
+→ Cari B
+→ Tampilkan kandidat berdasarkan matching
+→ Pilih B
+→ B menerima/menolak dalam 30 detik
+
+B:
+→ Input tujuan
+→ Cari A
+→ Tampilkan kandidat berdasarkan matching
+→ Tampilkan lokasi A
+→ Pilih A
+→ A menerima/menolak dalam 30 detik
+
+Jika tidak sepakat:
+→ kembali AVAILABLE
+
+Jika sepakat:
+→ MATCHED
+→ A dan B masing-masing lock 1 Koin
+→ lokasi B dibuka kepada A
+→ A menuju B
+→ A bertemu B
+→ A scan QR permanen B
+→ Server verifikasi
+→ VERIFIED
+→ A -1 Koin
+→ B -1 Koin
+→ AJUN +2 Koin
+→ perjalanan selesai
+→ akun kembali AVAILABLE
+
+Jika QR tidak diverifikasi:
+→ Koin tetap LOCKED
+→ tidak dapat melakukan perjalanan berikutnya
+→ menunggu sampai batas 1 jam
+→ auto settlement
+→ koin dipotong
+→ perjalanan ditutup
+→ akun kembali AVAILABLE
+
+---
+
+# 18. Prinsip Pengembangan Teknis
+
+AJUN akan dikembangkan pertama kali sebagai Web App agar proses development dan debugging lebih ringan.
+
+Arsitektur harus dibuat sejak awal dengan prinsip:
+
+**WEB-FIRST, MOBILE-READY**
+
+Artinya:
+
+- Web digunakan untuk MVP.
+- Backend dan database dibuat reusable.
+- Logika matching tidak bergantung pada tampilan web.
+- Sistem akun dan wallet terpusat.
+- Sistem QR dapat digunakan web maupun mobile.
+- API disiapkan agar nantinya dapat digunakan aplikasi Android/iOS.
+- Ketika AJUN ditransformasikan menjadi aplikasi mobile, backend dan database tidak perlu dibangun ulang.
+
+---
+
+## Catatan
+
+Dokumen ini adalah **versi awal logika bisnis AJUN**. Detail seperti metode pembayaran/top up, aturan pembatalan, sengketa, tarif antara A dan B, batas area operasi, sistem rating, dan algoritma matching detail akan ditentukan pada tahap desain berikutnya.
