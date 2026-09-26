@@ -1,0 +1,601 @@
+Bisa. Saya susun roadmap-nya dengan menjadikan **flow AJUN yang sudah kita bangun** sebagai fondasi, bukan mulai ulang.
+
+Target akhirnya kita arahkan ke **AJUN mobile app yang benar-benar siap dipakai**, bukan sekadar demo.
+
+## ROADMAP AJUN — BLOK 229 → FINAL
+
+### 🟢 FASE 6 — Production Backend
+
+**Blok 229–250**
+
+Tujuan: memindahkan AJUN dari database lokal ke sistem online.
+
+* 229–235 → database production
+* 236–240 → konfigurasi environment production
+* 241–245 → deployment backend
+* 246–250 → test API production
+
+**Hasil:**
+
+```text
+AJUN Backend ONLINE
+        ↓
+Database ONLINE
+        ↓
+API bisa diakses mobile
+```
+
+---
+
+### 🟢 FASE 7 — Rapikan Backend AJUN
+
+**Blok 251–285**
+
+Sebelum membuat aplikasi mobile, backend harus benar-benar siap.
+
+#### Authentication
+
+* login
+* register
+* session
+* logout
+* validasi akun
+
+#### User
+
+* profile
+* coin balance
+* locked coins
+* referral
+* QR token
+
+#### Trip
+
+Flow yang sudah kita buktikan:
+
+```text
+AVAILABLE
+   ↓
+SELECTED
+   ↓
+WAITING_CONFIRMATION
+   ↓
+MATCHED
+   ↓
+LOCKED
+   ↓
+VERIFIED
+   ↓
+ON_TRIP
+   ↓
+COMPLETED
+```
+
+Flow ini tetap menjadi **inti AJUN**.
+
+---
+
+### 🟢 FASE 8 — Sistem Koin
+
+**Blok 286–320**
+
+Sekarang kita naikkan sistem koin dari sekadar angka database menjadi sistem transaksi.
+
+Target:
+
+```text
+Saldo Koin
+   ↓
+Riwayat Koin
+   ↓
+Koin Terkunci
+   ↓
+Koin Dikembalikan
+```
+
+Yang perlu dibuat:
+
+* coin balance
+* locked coin
+* coin transaction history
+* transaksi masuk
+* transaksi keluar
+* lock
+* release
+* validasi saldo
+* pencegahan saldo negatif
+* atomic transaction
+
+**Catatan penting:** aturan settlement akhir saat perjalanan selesai masih perlu kita tetapkan; pengujian sekarang menunjukkan koin yang terkunci dikembalikan kepada driver dan passenger.
+
+---
+
+### 🟢 FASE 9 — Sistem Trip Nyata
+
+**Blok 321–370**
+
+Dashboard sekarang masih banyak bersifat testing.
+
+Kita ubah menjadi pengalaman pengguna sebenarnya.
+
+#### Passenger
+
+```text
+Cari perjalanan
+      ↓
+Pilih driver
+      ↓
+Tunggu konfirmasi
+      ↓
+Driver menerima
+      ↓
+MATCHED
+```
+
+#### Driver
+
+```text
+Buat perjalanan
+      ↓
+Tunggu passenger
+      ↓
+Konfirmasi passenger
+      ↓
+MATCHED
+```
+
+Kemudian:
+
+```text
+MATCHED
+   ↓
+Lock Coin
+   ↓
+QR Verification
+   ↓
+VERIFIED
+   ↓
+Start Trip
+   ↓
+ON_TRIP
+   ↓
+Complete
+```
+
+Role dan tombol tetap mengikuti state perjalanan seperti yang sudah kita tes.
+
+---
+
+### 🟢 FASE 10 — QR Verification
+
+**Blok 371–400**
+
+QR yang sekarang masih berupa `qrToken` user akan kita jadikan bagian dari sistem perjalanan nyata.
+
+Target:
+
+```text
+MATCHED
+   ↓
+LOCKED
+   ↓
+QR
+   ↓
+VERIFY
+   ↓
+VERIFIED
+```
+
+Termasuk:
+
+* QR generation
+* QR display
+* QR scanning
+* token validation
+* token expiry
+* mencegah QR dipakai untuk trip lain
+* mencegah verification berulang
+* validasi role
+
+QR hanya boleh memindahkan trip dari `LOCKED` ke `VERIFIED`. Setelah itu driver dapat memulai perjalanan.
+
+---
+
+# 🟡 FASE 11 — UI/UX AJUN
+
+**Blok 401–450**
+
+Ini fase penting kalau target kita adalah aplikasi yang terasa seperti produk sungguhan.
+
+Dashboard testing akan kita ubah menjadi UI mobile.
+
+### Halaman utama
+
+```text
+AJUN
+│
+├── Home
+├── Cari Perjalanan
+├── Perjalanan Saya
+├── Buat Perjalanan
+├── Koin
+├── Profile
+└── Notifikasi
+```
+
+UI harus:
+
+* mobile-first
+* tombol besar
+* mudah digunakan satu tangan
+* status perjalanan jelas
+* loading state
+* error state
+* empty state
+* confirmation dialog
+* success feedback
+
+---
+
+# 🟡 FASE 12 — Home & Matching Experience
+
+**Blok 451–490**
+
+Home bukan lagi sekadar halaman dashboard.
+
+Passenger melihat:
+
+```text
+Mau ke mana?
+[________________]
+
+Cari Perjalanan
+```
+
+Driver melihat:
+
+```text
+Mau menuju mana?
+[________________]
+
+Buat Perjalanan
+```
+
+Kemudian daftar perjalanan:
+
+```text
+UNDIP Tembalang
+
+Driver: username
+Status: Tersedia
+
+[ Pilih ]
+```
+
+Dan passenger bisa mengikuti status secara jelas.
+
+---
+
+# 🟡 FASE 13 — Perjalanan Aktif
+
+**Blok 491–520**
+
+Buat halaman khusus:
+
+```text
+PERJALANAN AKTIF
+```
+
+Contoh:
+
+```text
+UNDIP Tembalang
+
+Driver
+muhammad
+
+Status
+● Sedang Berjalan
+
+[ Detail Perjalanan ]
+```
+
+State berubah otomatis:
+
+```text
+MATCHED
+LOCKED
+VERIFIED
+ON_TRIP
+COMPLETED
+```
+
+Tidak lagi mengandalkan kumpulan tombol testing di dashboard.
+
+---
+
+# 🟡 FASE 14 — Profile & Account
+
+**Blok 521–540**
+
+Profile:
+
+```text
+Username
+Email
+Referral Code
+QR
+Coin Balance
+```
+
+Kemudian:
+
+* edit profile
+* account information
+* referral
+* QR
+* logout
+
+---
+
+# 🟠 FASE 15 — NOTIFICATION SYSTEM
+
+**Blok 541–570**
+
+AJUN harus memberi tahu pengguna ketika sesuatu terjadi.
+
+Contoh:
+
+```text
+Passenger memilih perjalananmu.
+        ↓
+Driver mendapat notifikasi.
+```
+
+Kemudian:
+
+```text
+Driver mengonfirmasi.
+        ↓
+Passenger mendapat notifikasi.
+```
+
+Dan:
+
+```text
+Koin terkunci
+QR terverifikasi
+Perjalanan dimulai
+Perjalanan selesai
+```
+
+Jadi user tidak perlu terus membuka dashboard untuk mengetahui perubahan.
+
+---
+
+# 🟠 FASE 16 — MOBILE APP
+
+**Blok 571–630**
+
+Di sini kita mulai membungkus konsep AJUN menjadi **aplikasi mobile sungguhan**.
+
+Arsitektur:
+
+```text
+             AJUN MOBILE
+          Android / iOS
+                 │
+                 ▼
+          AJUN API SERVER
+                 │
+          ┌──────┴──────┐
+          ▼             ▼
+      Database       Services
+```
+
+Yang kita buat:
+
+* mobile navigation
+* login mobile
+* register mobile
+* home
+* trip
+* profile
+* coin
+* QR
+* notification
+* API connection
+* persistent authentication
+
+Target:
+
+**user tidak merasa sedang membuka website.**
+
+---
+
+# 🔴 FASE 17 — SECURITY
+
+**Blok 631–670**
+
+Sebelum release, kita tutup celah yang sekarang masih ada karena project awalnya untuk testing.
+
+Contohnya:
+
+### Endpoint testing
+
+Sekarang ada:
+
+```text
+/api/test-coins
+/api/test-db
+/api/auth/reset-test
+```
+
+Endpoint seperti ini **tidak boleh dibiarkan terbuka di production**.
+
+Kita akan:
+
+* menghapus/mematikan endpoint testing
+* authorization
+* role validation
+* authentication validation
+* input validation
+* rate limiting
+* trip ownership validation
+* coin transaction protection
+* QR protection
+
+---
+
+# 🔴 FASE 18 — TESTING BESAR
+
+**Blok 671–720**
+
+Kita test skenario normal:
+
+```text
+Driver → buat trip
+Passenger → pilih
+Driver → confirm
+Lock
+QR
+Start
+Complete
+```
+
+Kemudian skenario gagal:
+
+```text
+Driver coin = 0
+Passenger coin = 0
+Driver tidak cocok
+Passenger tidak cocok
+Trip sudah selesai
+QR salah
+QR expired
+Lock dua kali
+Confirm dua kali
+Start sebelum VERIFIED
+Complete sebelum ON_TRIP
+```
+
+Kita juga test dua user secara bersamaan.
+
+---
+
+# 🔴 FASE 19 — PRODUCTION RELEASE
+
+**Blok 721–750**
+
+Finalisasi:
+
+```text
+AJUN
+ │
+ ├── Mobile App
+ │
+ ├── Backend
+ │
+ ├── Production Database
+ │
+ ├── Authentication
+ │
+ ├── Coin System
+ │
+ ├── Trip System
+ │
+ ├── QR Verification
+ │
+ └── Notifications
+```
+
+Kemudian:
+
+* production environment
+* domain/API
+* database backup
+* error logging
+* monitoring
+* build release
+* Android testing
+* final bug fixing
+
+---
+
+# 🏁 FASE 20 — AJUN FINAL
+
+**± Blok 751+**
+
+Di titik ini kita tidak lagi mengejar fitur dasar.
+
+Kita masuk ke:
+
+```text
+POLISH
+   ↓
+PERFORMANCE
+   ↓
+UI DETAIL
+   ↓
+BUG FIX
+   ↓
+USER EXPERIENCE
+   ↓
+RELEASE
+```
+
+---
+
+## Gambaran keseluruhan
+
+```text
+229
+ │
+ ├─ Production Database
+ ├─ Backend Online
+ │
+ ├─ Authentication
+ ├─ Coin System
+ ├─ Trip System
+ ├─ QR System
+ │
+ ├─ Mobile UI/UX
+ ├─ Matching
+ ├─ Active Trip
+ ├─ Profile
+ ├─ Notification
+ │
+ ├─ Mobile App
+ │
+ ├─ Security
+ ├─ Testing
+ │
+ └─ Production
+        │
+        ▼
+     🚀 AJUN
+```
+
+### Target milestone kita
+
+| Milestone           |     Blok |
+| ------------------- | -------: |
+| Backend production  |  **250** |
+| Backend AJUN rapi   |  **285** |
+| Koin matang         |  **320** |
+| Trip nyata          |  **370** |
+| QR matang           |  **400** |
+| UI/UX mobile        |  **450** |
+| Matching experience |  **490** |
+| Active trip         |  **520** |
+| Profile             |  **540** |
+| Notification        |  **570** |
+| Mobile app          |  **630** |
+| Security            |  **670** |
+| Full testing        |  **720** |
+| Production release  |  **750** |
+| Polish/final        | **750+** |
+
+**Jadi saya akan anggap Blok 229 sebagai awal fase production, dan target besar kita adalah AJUN versi mobile yang benar-benar usable sekitar Blok 750+.**
+
+Dan sesuai pola kerja kita, **kita tetap satu blok → jalankan → kirim hasil → `p` → lanjut**. Jadi kamu tidak perlu mengerjakan puluhan command sekaligus.
