@@ -1,0 +1,6 @@
+{
+  "name": "Ajun",
+  "description": "Platform tumpangan sesama mahasiswa (peer-to-peer ride matching) dengan closed-loop immutable ledger",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

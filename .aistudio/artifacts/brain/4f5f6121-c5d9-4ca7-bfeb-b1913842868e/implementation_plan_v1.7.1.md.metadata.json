@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementation Plan v1.7.1 untuk Ajun (Antar Jemput Universitas) dengan status isu tuntas (matched_at, confirmation window 15 menit, config-driven timeouts, uq_request_pair re-requesting, atomisitas verifikasi kampus) dan pencatatan isu terbuka (validasi invarian lead time di Fase 3, desain pembayaran di Fase 8, gerbang legalitas sebelum production). Dokumen siap ditinjau sebelum memulai Fase 1a.",
+  "updatedAt":  "2026-10-31T01:15:36.228971050Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

@@ -1,0 +1,6 @@
+{
+  "summary":  "Dokumen implementasi Ajun v1.7 lengkap dan mandiri: pemulihan tabel transisi rides, pembatalan match superseded, CHECK driver_id <> passenger_id, per-user time overlap rejection (MATCH_OVERLAP_MINUTES), batas waktu REOPEN_MIN_LEAD_MINUTES, migrasi universal ke TIMESTAMPTZ, tabel refresh_tokens dengan deteksi reuse token family di Fase 1a, aturan blokir hapus akun ketat, tombstone UPSERT dan normalisasi HMAC-SHA256, tabel sweeper 11 tugas berkala, perbaikan skema GPS dan purge_after, verifikasi kampus Jalur A vs B, data model pembatalan telat is_late_cancel dan MATCHING_RESTRICTION_24H, penambahan Fase 5.5 Privacy Pack sebagai syarat wajib pilot-lite, penanganan pembagian nol pada float, status PARTIALLY_REFUNDED, serta daftar pertanyaan konsultasi hukum.",
+  "updatedAt":  "2026-10-31T00:54:53.009851370Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

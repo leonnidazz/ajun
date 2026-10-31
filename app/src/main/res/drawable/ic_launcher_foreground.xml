@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.65"
+        android:scaleY="0.65"
+        android:translateX="18.9"
+        android:translateY="18.9">
+        <!-- University Building / Cap & Car Motif -->
+        <!-- Car Silhouette -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M18.92,40.01C18.72,39.42 18.16,39 17.5,39H6.5C5.84,39 5.28,39.42 5.08,40.01L0,55V85C0,87.76 2.24,90 5,90H7C9.76,90 12,87.76 12,85V80H60V85C60,87.76 62.24,90 65,90H67C69.76,90 72,87.76 72,85V55L66.92,40.01C66.72,39.42 66.16,39 65.5,39H54.5C53.84,39 53.28,39.42 53.08,40.01L48,55H24L18.92,40.01ZM10,70C7.24,70 5,67.76 5,65C5,62.24 7.24,60 10,60C12.76,60 15,62.24 15,65C15,67.76 12.76,70 10,70ZM62,70C59.24,70 57,67.76 57,65C57,62.24 59.24,60 62,60C64.76,60 67,62.24 67,65C67,67.76 64.76,70 62,70ZM8,50L12,38H60L64,50H8Z" />
+        <!-- Graduation Cap / Campus Symbol Above Car -->
+        <path
+            android:fillColor="#FFD54F"
+            android:pathData="M36,6L6,21L36,36L66,21L36,6ZM60,28.5V37.5C60,45.78 49.25,52.5 36,52.5C22.75,52.5 12,45.78 12,37.5V28.5L36,40.5L60,28.5Z" />
+    </group>
+</vector>
